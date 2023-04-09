@@ -1,11 +1,14 @@
 import React from 'react'
-import { Modal, Radio, Form, Input, Button, Row, Col, Checkbox } from "antd";
+import { Modal, Radio, Form, Input, Button, Row, Col, Checkbox, message } from "antd";
 import styles from '../css/LoginForm.module.css'
-import { useState, useRef,useEffect } from 'react'
-import { getCaptcha } from '../api/user';
+import { useState, useRef, useEffect, } from 'react'
+import { getCaptcha, userIsExit, addUser } from '../api/user';
+import { initUserInfo, changeLoginStatus } from '../redux/userSlice';
+import { useDispatch } from 'react-redux';
 
 export default function LoginForm(props) {
     const [value, setValue] = useState(1)
+    const dispatch = useDispatch();
 
     // 登录表单的状态数据
     const [loginInfo, setLoginInfo] = useState({
@@ -23,21 +26,52 @@ export default function LoginForm(props) {
     })
 
     const [captcha, setCaptcha] = useState(null);
-    async function captchaClickHandle(){
+    async function captchaClickHandle() {
         const result = await getCaptcha();
         setCaptcha(result);
     }
-    useEffect(()=>{
+    useEffect(() => {
         captchaClickHandle()
-    },[props.isModalOpen])
+    }, [props.isModalOpen])
     const loginFormRef = useRef();
     const registerFormRef = useRef();
 
 
-
-
     function loginHandle() { }
-    function registerHandle() { }
+
+    // 注册逻辑
+    async function registerHandle() {
+        const res = await addUser(registerInfo);
+        console.log("42>>>>", res);
+        if (res.code === 0) {
+            message.success("用户注册成功，默认密码为：123456")
+            // 将用户信息更新到数据仓库中
+            dispatch(initUserInfo(res.data))
+            // 改变登录状态
+            dispatch(changeLoginStatus(true))
+            // 关闭弹窗
+            handleCancel()
+        } else {
+            message.warning(res.msg)
+            captchaClickHandle()
+        }
+    }
+
+    // 关闭弹窗 表单内容清空
+    function handleCancel() {
+        setRegisterInfo({
+            loginId: '',
+            nickname: '',
+            captcha: '',
+        })
+        setLoginInfo({
+            loginId: '',
+            loginPwd: '',
+            captcha: '',
+            remember: false
+        })
+        props.closeModal()
+    }
 
     /**
      * @param {*} oldInfo 之前整体的状态
@@ -50,7 +84,20 @@ export default function LoginForm(props) {
         obj[key] = newContent;
         setInfo(obj);
     }
-    function checkLoginIdIsExist() { }
+
+    /**
+     * 验证用户是否存在
+     */
+    async function checkLoginIdIsExist() {
+        if (registerInfo.loginId) {
+            const { data } = await userIsExit(registerInfo.loginId);
+            console.log("data", data);
+            // 该 loginId 已经注册过了
+            if (data) {
+                return Promise.reject("该用户已经注册过了");
+            }
+        }
+    }
 
 
 
@@ -148,8 +195,8 @@ export default function LoginForm(props) {
                         }}
                     >
                         <Checkbox
-                        onChange={(e) => updateInfo(loginInfo, e.target.checked, 'remember', setLoginInfo)}
-                        checked={loginInfo.remember}
+                            onChange={(e) => updateInfo(loginInfo, e.target.checked, 'remember', setLoginInfo)}
+                            checked={loginInfo.remember}
                         >记住我</Checkbox>
                     </Form.Item>
 
