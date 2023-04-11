@@ -7,6 +7,13 @@ const service = axios.create({
 
 // 请求拦截
 service.interceptors.request.use((config) => {
+
+    // 从本地拿到 token
+    const token = localStorage.getItem("userToken")
+    if(token){
+        config.headers['Authorization'] = "Bearer " + token
+    }
+
     // 做相应处理...
     return config
 }, (err) => {
