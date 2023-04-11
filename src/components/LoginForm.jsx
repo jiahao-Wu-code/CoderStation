@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal, Radio, Form, Input, Button, Row, Col, Checkbox, message } from "antd";
 import styles from '../css/LoginForm.module.css'
 import { useState, useRef, useEffect, } from 'react'
-import { getCaptcha, userIsExit, addUser } from '../api/user';
+import { getCaptcha, userIsExit, addUser, userLogin, getUserById } from '../api/user';
 import { initUserInfo, changeLoginStatus } from '../redux/userSlice';
 import { useDispatch } from 'react-redux';
 
@@ -36,8 +36,36 @@ export default function LoginForm(props) {
     const loginFormRef = useRef();
     const registerFormRef = useRef();
 
-
-    function loginHandle() { }
+    // 登录
+    async function loginHandle() {
+        const result = await userLogin(loginInfo);
+        if (result.data) {
+            // 验证码是正确的
+            // 接下来会有这么几种情况 （1）密码不正确 （2）账户被冻结 （3）账户正常，能够正常登录
+            const data = result.data;
+            if (!data.data) {
+                // 账号密码不正确
+                message.error("账号或密码不正确");
+                captchaClickHandle();
+            } else if (!data.data.enabled) {
+                // 账号被禁用了
+                message.warning("账号被禁用");
+                captchaClickHandle();
+            } else {
+                // 说明账号密码正确，能够登录
+                // 存储 token
+                localStorage.userToken = data.token;
+                // 将用户的信息存储到状态仓库，方便后面使用
+                const result = await getUserById(data.data._id);
+                dispatch(initUserInfo(result.data));
+                dispatch(changeLoginStatus(true));
+                handleCancel();
+            }
+        } else {
+            message.warning(result.msg);
+            captchaClickHandle();
+        }
+    }
 
     // 注册逻辑
     async function registerHandle() {
