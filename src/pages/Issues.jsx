@@ -3,7 +3,10 @@ import PageHeader from '../components/PageHeader';
 import styles from '../css/Issue.module.css';
 import { getIssueByPage } from '../api/issue';
 import IssueItem from '../components/IssueItem';
-
+import { Pagination } from 'antd';
+import AddIssueBtn from '../components/AddIssueBtn';
+import Recommend from '../components/Recommend';
+import ScoreRank from '../components/ScoreRank';
 function Issues() {
 
     // 获取到的列表数据
@@ -32,12 +35,24 @@ function Issues() {
             })
         }
         fetchData();
-    }, [pageInfo.current])
+    }, [pageInfo.current, pageInfo.pageSize])
 
     // issue list
     let issueList = [];
     issueList = issueInfo.map(item => (<IssueItem key={item._id} issueInfo={item} />))
     // console.log("40>>>", issueList)
+
+    /**
+     * 处理分页
+     * @param {*} current 
+     * @param {*} pageSize 
+     */
+    function handlePageChange(current, pageSize) {
+        setPageInfo({
+            current,
+            pageSize
+        })
+    }
 
 
 
@@ -50,9 +65,21 @@ function Issues() {
                 {/* 左边区域 */}
                 <div className={styles.leftSide}>
                     {issueList}
+                    <div className="paginationContainer">
+                        <Pagination
+                            showQuickJumper
+                            defaultCurrent={1}
+                            {...pageInfo}
+                            onChange={handlePageChange}
+                        />
+                    </div>
                 </div>
                 {/* 右边区域 */}
-                <div className={styles.rightSide}></div>
+                <div className={styles.rightSide}>
+                    <AddIssueBtn />
+                    <Recommend />
+                    <ScoreRank />
+                </div>
             </div>
         </div>
     );
