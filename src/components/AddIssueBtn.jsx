@@ -15,7 +15,7 @@ export default function AddIssueBtn() {
         // 跳转添加问答页面
         // 判断是否登录
         if (isLogin) {
-
+            navigate("/addIssue")
         } else {
             message.warning("请先登录")
         }
