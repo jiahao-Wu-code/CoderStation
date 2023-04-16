@@ -25,3 +25,14 @@ export function addIssue(newIssue) {
     data: newIssue
   })
 }
+
+
+/**
+ * 根据 id 获取问答的详情
+ */
+export function getIssueById(issueId){
+  return request({
+    url : `/api/issue/${issueId}`,
+    method : "GET",
+  })
+}

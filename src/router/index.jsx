@@ -5,6 +5,7 @@ import Issues from '../pages/Issues';
 import Books from '../pages/Books';
 import Note from '../pages/Note';
 import AddIssue from "../pages/AddIssue";
+import IssueDetail from "../pages/IssueDetail";
 
 function RouteConfig() {
     return (
@@ -13,6 +14,7 @@ function RouteConfig() {
             <Route path="/books" element={<Books />} />
             <Route path="/note" element={<Note />} />
             <Route path="/addIssue" element={<AddIssue />} />
+            <Route path="/issues/:id" element={<IssueDetail />} />
             <Route path="/" element={<Navigate replace to="/issues" />} />
         </Routes>
     )
