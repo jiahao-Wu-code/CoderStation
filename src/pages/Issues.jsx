@@ -26,7 +26,7 @@ function Issues() {
                 pageSize: pageInfo.pageSize,
                 issueStatus: true
             });
-            console.log("25>>>", data)
+            // console.log("25>>>", data)
             setIssueInfo(data.data);
             setPageInfo({
                 current: data.currentPage,

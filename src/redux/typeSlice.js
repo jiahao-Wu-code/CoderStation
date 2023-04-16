@@ -19,11 +19,17 @@ const typeSlice = createSlice({
 
     },
     // 专门处理异步的 reducer
-    extraReducers: {
-        [getTypeList.fulfilled]: (state, { payload }) => {
+    // extraReducers: {
+    //     [getTypeList.fulfilled]: (state, { payload }) => {
+    //         state.typeList = payload
+    //     }
+    // }
+    
+    extraReducers: (builder) => {
+        builder.addCase(getTypeList.fulfilled, (state, { payload }) => {
             state.typeList = payload
-        }
-    }
+        })
+    },
 })
 
 export default typeSlice.reducer
