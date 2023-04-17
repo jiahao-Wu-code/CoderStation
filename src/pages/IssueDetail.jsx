@@ -7,6 +7,7 @@ import Recommend from '../components/Recommend';
 import ScoreRank from '../components/ScoreRank';
 import { getUserById } from '../api/user';
 import { formatDate } from '../utils/tools';
+import Discuss from '../components/Discuss';
 
 export default function IssueDetail() {
     const { id } = useParams();
@@ -17,7 +18,6 @@ export default function IssueDetail() {
         async function fetchData() {
             const { data } = await getIssueById(id);
             const result = await getUserById(data.userId)
-            console.log("18", result)
             setuserInfo(result.data)
             setissueInfo(data)
         }
@@ -45,6 +45,10 @@ export default function IssueDetail() {
                         </div>
                     </div>
                     {/* 评论 */}
+                    <Discuss
+                        commentType={1}
+                        targetId={issueInfo?._id}
+                    />
                 </div>
 
                 {/* 右侧 */}
