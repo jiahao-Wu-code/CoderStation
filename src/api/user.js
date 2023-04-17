@@ -29,7 +29,7 @@ export function userIsExit(loginId) {
  * @param { Object } newUserInfo 用户注册信息
  * @returns 
  */
-export function addUser(newUserInfo){
+export function addUser(newUserInfo) {
     return request({
         url: `/api/user`,
         method: 'POST',
@@ -42,7 +42,7 @@ export function addUser(newUserInfo){
  * @param {} loginInfo 登录信息
  * @returns 
  */
-export function userLogin(loginInfo){
+export function userLogin(loginInfo) {
     return request({
         url: `/api/user/login`,
         method: 'POST',
@@ -55,7 +55,7 @@ export function userLogin(loginInfo){
  * @param {String} id 
  * @returns 
  */
-export function getUserById(id){
+export function getUserById(id) {
     return request({
         url: `/api/user/${id}`,
         method: 'GET',
@@ -67,7 +67,7 @@ export function getUserById(id){
  * 
  * 恢复登录状态
  */
-export function getInfo(){
+export function getInfo() {
     return request({
         url: `/api/user/whoami`,
         method: 'GET',
@@ -78,9 +78,9 @@ export function getInfo(){
 /**
  * 获取积分前十的用户
  */
-export function getUserByPointsRank(){
+export function getUserByPointsRank() {
     return request({
-      url : "/api/user/pointsrank",
-      method : "GET",
+        url: "/api/user/pointsrank",
+        method: "GET",
     })
 }
