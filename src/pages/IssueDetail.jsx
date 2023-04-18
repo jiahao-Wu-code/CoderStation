@@ -48,6 +48,7 @@ export default function IssueDetail() {
                     <Discuss
                         commentType={1}
                         targetId={issueInfo?._id}
+                        issueInfo={issueInfo}
                     />
                 </div>
 
