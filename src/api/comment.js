@@ -10,6 +10,20 @@ export function getIssueCommentById(id, params) {
   return request({
     url: `/api/comment/issuecomment/${id}`,
     method: "GET",
-    params,
+    params: {
+      ...params,
+    },
   });
-}  
+} 
+
+
+/**
+ * 提交评论
+ */
+export function addComment(newComment){
+  return request({
+    url : "/api/comment",
+    method : "POST",
+    data : newComment
+  })
+}

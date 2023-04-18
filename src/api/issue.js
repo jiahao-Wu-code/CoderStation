@@ -36,3 +36,15 @@ export function getIssueById(issueId){
     method : "GET",
   })
 }
+
+
+/**
+ * 更新问答
+ */
+export function updateIssue(issueId, newIssueInfo){
+  return request({
+    url : `/api/issue/${issueId}`,
+    method : "PATCH",
+    data : newIssueInfo
+  })
+}

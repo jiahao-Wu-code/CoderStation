@@ -2,18 +2,25 @@ import React, { useRef, useState, useEffect } from 'react'
 import { Comment } from '@ant-design/compatible';
 import { useSelector } from 'react-redux'
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Form, Button, List, Tooltip } from 'antd';
+import { Avatar, Form, Button, List, Tooltip, message, Pagination } from 'antd';
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { getIssueCommentById } from '../api/comment'
 import { getUserById } from '../api/user';
 import { formatDate } from '../utils/tools';
+import { addComment } from '../api/comment';
+import { updateIssue } from '../api/issue';
+import { useDispatch } from 'react-redux';
+import { updateUserInfoAsync } from '../redux/userSlice';
+import styles from "../css/Discuss.module.css"
 
 
 
 export default function Discuss(props) {
-    const { useInfo, isLogin } = useSelector(state => state.user)
+    const { userInfo, isLogin } = useSelector(state => state.user)
     const [commentList, setCommentList] = useState([])
+    const dispatch = useDispatch();
+    const [refresh, setRefresh] = useState(false);
     const [pageInfo, setPageInfo] = useState({
         current: 1,
         pageSize: 10,
@@ -58,9 +65,51 @@ export default function Discuss(props) {
         if (props.targetId) {
             fetchCommentList();
         }
-    }, [props.targetId])
+    }, [props.targetId, refresh])
+
+    function onSubmit() {
+        let newComment = null
+        if (props.commentType === 1) {
+            // 新增问答评论
+            newComment = editorRef.current.getInstance().getHTML()
+            if (newComment === '<p><br></p>') {
+                newComment = ''
+            }
+        } else if (props.commentType === 2) {
+            // 书籍评论
+        }
+        if (!newComment) {
+            message.warning("请输入评论内容")
+            return
+        }
+        addComment({
+            userId: userInfo._id,
+            typeId: props.issueInfo ? props.issueInfo.typeId : props.bookInfo.typeId,
+            commentContent: newComment,
+            commentType: props.commentType,
+            bookId: null,
+            issueId: props.targetId
+        });
+        message.success("评论成功");
+        setRefresh(!refresh);
+        editorRef.current.getInstance().setHTML("");
 
 
+        // 更新该问答评论数
+        updateIssue(props.targetId, {
+            commentNumber: props.issueInfo ? ++props.issueInfo.commentNumber : ++props.bookInfo.commentNumber
+        });
+
+
+        // 更新积分的变化
+        dispatch(updateUserInfoAsync({
+            userId: userInfo._id,
+            newInfo: {
+                points: userInfo.points + 4
+            }
+        }));
+
+    }
 
     return (
         <div>
@@ -81,7 +130,7 @@ export default function Discuss(props) {
                             />
                         </Form.Item>
                         <Form.Item>
-                            <Button type="primary" disabled={!isLogin}>添加评论</Button>
+                            <Button type="primary" disabled={!isLogin} onClick={onSubmit}>添加评论</Button>
                         </Form.Item>
                     </>
                 }
@@ -111,6 +160,24 @@ export default function Discuss(props) {
                 />
             }
             {/* 分页 */}
+            {
+                commentList.length > 0 ? (
+                    <div className={styles.paginationContainer}>
+                        <Pagination
+                            showQuickJumper
+                            defaultCurrent={1}
+                            total={pageInfo.total}
+                        />
+                    </div>
+                ) : (
+                    <div style={{
+                        fontWeight: "200",
+                        textAlign: "center",
+                        margin: "50px"
+                    }}
+                    >暂无评论</div>
+                )
+            }
         </div>
     )
 }
