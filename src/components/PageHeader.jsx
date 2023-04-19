@@ -13,6 +13,7 @@ export default function PagerHeader(props) {
                 {props.title}
             </div>
             {/* 分类选择 */}
+            {props.children}
         </div>
     )
 }
