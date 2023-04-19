@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from "react-router-dom";
 import { Input, Select, Space } from "antd";
 import LoginAvatar from './LoginAvatar';
+import { useNavigate } from 'react-router-dom';
 
 function PageHeader(props) {
     const options = [
@@ -14,6 +15,30 @@ function PageHeader(props) {
             value: 'book',
         },
     ]
+    const navigate = useNavigate()
+
+    const [searchOption, setSearchOption] = useState('issue')
+
+    function onSearch(value) {
+        if (value) {
+            // 搜索框有内容，需要进行搜索操作
+            navigate('/searchPage', {
+                state: {
+                    value,
+                    searchOption
+                }
+            })
+        } else {
+            // 搜索框没有内容，跳转到首页
+            navigate("/");
+        }
+    }
+
+    function onChange(val) {
+        setSearchOption(val)
+    }
+
+
     return (
         <div className="headerContainer">
             {/* 头部 logo */}
@@ -29,13 +54,15 @@ function PageHeader(props) {
             {/* 搜索框 */}
             <div className="searchContainer">
                 <Space.Compact>
-                    <Select defaultValue="问答" options={options} size="large" />
+                    <Select defaultValue="问答" options={options} size="large" onChange={onChange} />
                     <Input.Search placeholder="请输入要搜索的内容" allowClear
                         enterButton="搜索"
                         size="large"
                         style={{
                             width: "80%"
-                        }} />
+                        }}
+                        onSearch={onSearch}
+                    />
                 </Space.Compact>
             </div>
             {/* 登录按钮 */}
