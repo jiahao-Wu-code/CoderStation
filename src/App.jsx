@@ -2,7 +2,7 @@ import { Layout, message } from 'antd';
 import NavHeader from './components/NavHeader';
 import PageFooter from './components/PageFooter';
 import './css/App.css'
-import RouterConfig from './router'
+import RouterBefore from './router/RouterBefore';
 import LoginForm from './components/LoginForm';
 import { useEffect, useState } from 'react';
 import { getInfo, getUserById } from './api/user';
@@ -54,7 +54,7 @@ function App() {
       </Header>
       {/* 匹配上的路由页面 */}
       <Content className="content">
-        <RouterConfig />
+        <RouterBefore />
       </Content>
       {/* 底部 */}
       <Footer className="footer">
