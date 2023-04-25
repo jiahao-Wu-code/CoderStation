@@ -7,12 +7,14 @@ import Note from '../pages/Note';
 import AddIssue from "../pages/AddIssue";
 import IssueDetail from "../pages/IssueDetail";
 import SearchPage from "../pages/SearchPage";
+import BookDetail from "../pages/BookDetail";
 
 function RouteConfig() {
     return (
         <Routes>
             <Route path="/issues" element={<Issues />} />
             <Route path="/books" element={<Books />} />
+            <Route path="/books/:id" element={<BookDetail />} />
             <Route path="/note" element={<Note />} />
             <Route path="/addIssue" element={<AddIssue />} />
             <Route path="/issues/:id" element={<IssueDetail />} />

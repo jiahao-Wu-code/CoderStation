@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { getTypeList, updateIssueTypeId } from '../redux/typeSlice';
+import { getTypeList, updateIssueTypeId,updateStoreBookTypeId } from '../redux/typeSlice';
 import { Tag } from 'antd';
 
 export default function TypeSelect() {
@@ -16,6 +16,7 @@ export default function TypeSelect() {
             dispatch(updateIssueTypeId(typeId))
         } else if (location.pathname === "/books") {
             // 处于书籍页面
+            dispatch(updateStoreBookTypeId(typeId))
         }
     }
 
