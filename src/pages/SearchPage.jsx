@@ -7,6 +7,8 @@ import Recommend from '../components/Recommend'
 import ScoreRank from '../components/ScoreRank'
 import { getIssueByPage } from '../api/issue'
 import SearchResult from '../components/SearchResult'
+
+import { getBookByPage } from "../api/book"
 /**
  * 搜索结果页
  */
@@ -47,6 +49,14 @@ export default function SearchPage() {
                     break;
                 }
                 case 'book': {
+                    searchParams.bookTitle = value;
+                    const { data } = await getBookByPage(searchParams);
+                    setPageInfo({
+                        current: data.currentPage,
+                        pageSize: data.eachPage,
+                        total: data.count,
+                    });
+                    setSearchData(data.data);
                     break;
                 }
             }

@@ -20,7 +20,10 @@ const typeSlice = createSlice({
     reducers: {
         updateIssueTypeId: (state, { payload }) => {
             state.issueTypeId = payload
-        }
+        },
+        updateStoreBookTypeId: (state, { payload }) => {
+            state.bookTypeId = payload;
+        },
     },
     // 专门处理异步的 reducer
     // extraReducers: {
@@ -36,6 +39,6 @@ const typeSlice = createSlice({
     },
 })
 
-export const { updateIssueTypeId } = typeSlice.actions
+export const { updateIssueTypeId, updateStoreBookTypeId } = typeSlice.actions
 
 export default typeSlice.reducer
