@@ -14,7 +14,7 @@ export default function LoginAvatar(props) {
     // 点击 退出登录 / 个人中心
     function listClickHandle(item) {
         if (item === '个人中心') {
-            
+            navigate('/personal')
         } else {
             // 退出登录
             // 清除 token
