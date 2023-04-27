@@ -95,3 +95,17 @@ export function editUser(userId, newUserInfo) {
         data: newUserInfo
     })
 }
+
+/**
+ * 验证用户账号密码是否正确
+ */
+export function checkPassword(userId, loginPwd){
+    return request({
+      url : "/api/user/passwordcheck",
+      method : "POST",
+      data : {
+        userId,
+        loginPwd
+      }
+    })
+  }
